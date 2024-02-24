@@ -99,8 +99,10 @@ def ghost_ping():
         if input_random_str:
             random_str = ''.join(random.choices(string.ascii_letters + string.digits, k=input_random_str_length))
         
+        converted_input_message = input_message.replace('\\n', '\n')
+
         res_send = DiscordUtils.send(
-            message=f"<@{user_id}> {input_message.replace('\\n', '\n')} {random_str}",
+            message=f"<@{user_id}> {converted_input_message} {random_str}",
             token=token,
             channel_id=channel_id
         )
