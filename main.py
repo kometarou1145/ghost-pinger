@@ -108,14 +108,15 @@ def ghost_ping():
         )
         LoggerModule.log(f"Send: {res_send.status_code}")
 
-        message_id = res_send.json()['id']
+        if res_send.status_code == 200:
+            message_id = res_send.json()['id']
 
-        res_delete = DiscordUtils.delete(
-            token=token,
-            channel_id=channel_id,
-            message_id=message_id
-        )
-        LoggerModule.log(f"Delete: {res_delete.status_code}")
+            res_delete = DiscordUtils.delete(
+                token=token,
+                channel_id=channel_id,
+                message_id=message_id
+            )
+            LoggerModule.log(f"Delete: {res_delete.status_code}")
 
         time.sleep(delay)
 
