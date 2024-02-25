@@ -79,7 +79,7 @@ def input():
         input_channel_amount = InputModule.custom_input(int, "Channel Amount: ")
 
         for i in range(input_channel_amount):
-            input_channel_id = InputModule.custom_input(int, "Channel ID: ")
+            input_channel_id = InputModule.custom_input(int, f"Channel ID ({i}): ")
             channel_id_list.append(input_channel_id)
 
 def ghost_ping():
@@ -87,36 +87,38 @@ def ghost_ping():
     global user_id_list
     global token_list
 
-    pt = product(channel_id_list, user_id_list, token_list)
-    for channel_id, user_id, token in pt:
-        delay = random.uniform(input_min_delay, input_max_delay)
+    while True:
+        for channel_id in channel_id_list:
+            for user_id in user_id_list:
+                for token in token_list:
+                    delay = random.uniform(input_min_delay, input_max_delay)
 
-        global input_random_str
-        global input_random_str_length
-        global input_message
-        global random_str
+                    global input_random_str
+                    global input_random_str_length
+                    global input_message
+                    global random_str
 
-        if input_random_str:
-            random_str = ''.join(random.choices(string.ascii_letters + string.digits, k=input_random_str_length))
-        
-        converted_input_message = input_message.replace('\\n', '\n')
+                    if input_random_str:
+                        random_str = ''.join(random.choices(string.ascii_letters + string.digits, k=input_random_str_length))
+                    
+                    converted_input_message = input_message.replace('\\n', '\n')
 
-        res_send = DiscordUtils.send(
-            message=f"<@{user_id}> {converted_input_message} {random_str}",
-            token=token,
-            channel_id=channel_id
-        )
-        LoggerModule.log(f"Send: {res_send.status_code}")
+                    res_send = DiscordUtils.send(
+                        message=f"<@{user_id}> {converted_input_message} {random_str}",
+                        token=token,
+                        channel_id=channel_id
+                    )
+                    LoggerModule.log(f"Send: {res_send.status_code}")
 
-        if res_send.status_code == 200:
-            message_id = res_send.json()['id']
+                    if res_send.status_code == 200:
+                        message_id = res_send.json()['id']
 
-            res_delete = DiscordUtils.delete(
-                token=token,
-                channel_id=channel_id,
-                message_id=message_id
-            )
-            LoggerModule.log(f"Delete: {res_delete.status_code}")
+                        res_delete = DiscordUtils.delete(
+                            token=token,
+                            channel_id=channel_id,
+                            message_id=message_id
+                        )
+                        LoggerModule.log(f"Delete: {res_delete.status_code}")
 
         time.sleep(delay)
 
