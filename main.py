@@ -120,7 +120,7 @@ def ghost_ping():
                         )
                         LoggerModule.log(f"Delete: {res_delete.status_code}")
 
-        time.sleep(delay)
+                    time.sleep(delay)
 
 def main():
     load_token()
